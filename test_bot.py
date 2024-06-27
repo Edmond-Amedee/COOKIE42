@@ -1,7 +1,7 @@
 import pytest
 from pyrogram import Client
 from pyrogram.types import Message
-from main import start
+from main import start, help_command, info_command
 
 @pytest.fixture
 def client():
@@ -18,5 +18,17 @@ def message():
 
 def test_start_command(client, message):
     response = start(client, message)
-    assert "Bienvenue! Le bot est actif." in response.text
+    assert "Bienvenue! Sélectionnez une action pour commencer" in response.text
+
+def test_help_command(client, message):
+    message.text = "/help"
+    response = help_command(client, message)
+    assert "/start - Démarrer le bot" in response.text
+    assert "/help - Afficher cette aide" in response.text
+
+def test_info_command(client, message):
+    message.text = "/info"
+    response = info_command(client, message)
+    assert "Nom : TestUser" in response.text
+    assert "ID Utilisateur : 1" in response.text
 
